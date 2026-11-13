@@ -1,9 +1,14 @@
-**Implementación de Automatización de Hardening y Auditoría CIS Benchmark (Cisco IOS & FortiOS)**
+# Implementación de Automatización de Hardening y Auditoría CIS Benchmark (Cisco IOS & FortiOS)
+
+[![Demostración en Video](https://img.shields.io/badge/Video-Demostración%20en%20YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/O-XU1Ox2bSA)
 
 **Autor:** Manuel Alejandro Cruz Messón
+
 **Matrícula:** 2025-0689
+
 **Asignatura:** Seguridad de Redes
-**Enlace del Video Demostrativo:** [Insertar enlace de YouTube aquí]
+
+**Enlace del Video Demostrativo:** https://youtu.be/O-XU1Ox2bSA
 
 ---
 
@@ -36,7 +41,7 @@ Este laboratorio integra una solución de automatización y seguridad perimetral
 
 La infraestructura se compone de un segmento de tránsito perimetral y un segmento LAN corporativo segmentado en VLANs (Usuarios y Gestión), estructurado bajo las redes derivadas de la matrícula `x.25.89.x`.
 
-[AQUI VA FOTO DE: Captura de la topología completa en PNetLab mostrando el FortiGate, Router, Switch y el nodo Linux]
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/TOPOLOGIA.png)
 
 **Matriz de Conectividad e Interfaces**
 
@@ -71,7 +76,8 @@ Se seleccionaron y justificaron las siguientes políticas de seguridad para endu
 **Objetivo:** Demostrar el estado vulnerable de la infraestructura (Pre-Hardening) utilizando Nmap y scripts NSE.
 **Comando ejecutado:** `nmap -Pn -sV -p 22,23,80,443 --script ssh2-enum-algos 172.25.89.1 172.25.89.2 10.25.89.2`
 
-[AQUI VA FOTO DE: Captura de pantalla de la terminal de Ubuntu mostrando el escaneo de Nmap donde se ven puertos 23/80 abiertos o el protocol 1.99 en SSH]
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/NMAP-1.png)
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/NMAP-2.png)
 
 **Resultado:** El escaneo confirmó el incumplimiento del CIS Benchmark: los dispositivos Cisco exponían la versión 1.99 de SSH (permitiendo algoritmos obsoletos), mientras que el Firewall FortiGate mantenía abiertos los puertos 23 (Telnet) y 80 (HTTP) permitiendo la gestión administrativa sin cifrado.
 
@@ -81,7 +87,9 @@ Se seleccionaron y justificaron las siguientes políticas de seguridad para endu
 
 Se programó la herramienta automatizada `hardening.py`, la cual orquesta la recolección de datos y el aprovisionamiento de las reglas de seguridad. El sistema lee un archivo de inventario `devices.json` estructurado de la siguiente manera:
 
-[AQUI VA FOTO DE: Captura de pantalla mostrando el contenido del archivo devices.json y/o un fragmento clave del código hardening.py]
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/DEVICES.png)
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/HARDENING-PY.png)
+
 
 **Características del motor automatizado:**
 *   **Netmiko:** Maneja la negociación SSH y autenticación a través de múltiples vendors (`cisco_ios` y `fortinet`).
@@ -95,30 +103,47 @@ Se programó la herramienta automatizada `hardening.py`, la cual orquesta la rec
 #### 7.1. Ejecución del Modo Auditoría Pasiva (Sin Cambios)
 **Objetivo:** Validar que el script es capaz de identificar las vulnerabilidades de configuración sin alterar la operatividad de la red. Se seleccionó la **Opción 1** del menú.
 
-[AQUI VA FOTO DE: Captura de pantalla del archivo informe_auditoria.md generado, mostrando claramente los controles marcados como [FAIL]]
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/CORRIENDO-SCRIPT-OPCION-1.png)
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/INFORME-ANTES-DE.png)
 
 **Resultado:** El script interactuó con los tres nodos, extrajo el estado de las variables de configuración y generó el `informe_auditoria.md`, reprobando correctamente las directrices ausentes.
 
 #### 7.2. Ejecución del Modo Remediación y Respaldo
 **Objetivo:** Inyectar masivamente los comandos de endurecimiento en los dispositivos y extraer la configuración final segura. Se seleccionó la **Opción 2** del menú.
 
-[AQUI VA FOTO DE: Captura de la terminal de Ubuntu mostrando el script corriendo en la Opción 2 y el mensaje de "Running-Configs guardados en el directorio /configs/"]
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/CORRIENDO-SCRIPT-OPCION-2.png)
 
 **Resultado:** La herramienta estableció conexión privilegiada, remitió los bloques de configuración de mitigación para Cisco IOS y FortiOS, guardó los cambios en memoria NVRAM y exportó con éxito los tres archivos `running-config.txt` al directorio local.
 
 #### 7.3. Validación Póstuma Automatizada
 **Objetivo:** Comprobar mediante el mismo script que los cambios inyectados revirtieron el estado de vulnerabilidad.
 
-[AQUI VA FOTO DE: Captura de pantalla del archivo informe_postumo.md generado, mostrando todos los controles en estado [PASS]]
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/INFOME-POSTUMO.png)
 
 **Resultado:** El análisis post-remediación demostró un cumplimiento del 100% en las políticas evaluadas en los tres dispositivos de red, certificando la efectividad del código.
 
 #### 7.4. Verificación Manual de Políticas
 **Objetivo:** Confirmar desde el plano de datos que las políticas de defensa en profundidad operan correctamente.
 
-[AQUI VA FOTO DE: Captura de la terminal demostrando que la conexión por Telnet al FortiGate fue rechazada (Connection refused) o mostrando que el comando show ip ssh indica SSH-2.0]
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/VERIFICACION-TELNET-SSH.png)
 
 **Resultado:** Se comprobó la mitigación efectiva; los intentos de conexión mediante protocolos en texto plano (Telnet) hacia el Firewall fueron denegados por la interfaz de red, y los túneles administrativos ahora exigen obligatoriamente algoritmos criptográficos robustos.
+
+### 7.5. Validación de Encriptación de Contraseñas (Cisco IOS)
+* **Objetivo:** Demostrar que el control de mitigación CIS se aplicó correctamente y que las credenciales locales de administración ya no se almacenan ni se exponen en texto plano dentro de la memoria del equipo.
+* **Comandos probados en consola Cisco:** `show running-config | include password` y `show running-config | include username`
+
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/INCLUDE-PASS-USERNAME.png)
+
+* **Resultado:** La configuración refleja el comando `service password-encryption` activo. Todas las contraseñas locales y de los puertos VTY han sido hasheadas (encriptación tipo 7), protegiendo las credenciales contra la lectura directa si el archivo de configuración es comprometido.
+
+### 7.6. Validación de Banner de Advertencia Pre-Login (FortiGate)
+* **Objetivo:** Comprobar que el firewall presenta un aviso legal disuasorio antes de solicitar credenciales o permitir el acceso, cumpliendo con el requisito legal de notificar que el sistema es de acceso restringido y está siendo monitoreado.
+* **Comandos probados desde Ubuntu Server:** `ssh -oKexAlgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 -c aes256-cbc admin@172.25.89.2`
+
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/BANNER.png)
+
+* **Resultado:** Al iniciar la conexión SSH, el sistema interrumpe el proceso de inicio de sesión estándar para imprimir el *Pre-login banner* configurado globalmente en FortiOS, requiriendo su lectura antes de exponer el prompt de contraseña.
 
 ---
 
@@ -136,11 +161,3 @@ Se programó la herramienta automatizada `hardening.py`, la cual orquesta la rec
 *   **Alcance del uso:** La herramienta sirvió de soporte analítico para la depuración de código de automatización de red y resolución de incompatibilidades de entorno durante el análisis de Nmap.
 *   **Autoría y validación:** El diseño topológico, direccionamiento IP VLSM basado en matrícula, configuración e inicialización en PNetLab, estructuración lógica del script de Hardening y las pruebas manuales de validación de seguridad fueron desarrolladas, ejecutadas y comprobadas íntegramente por el autor del proyecto.
 ```
-
-### Resumen de los pasos a seguir con este archivo:
-1. Copia el texto completo del bloque anterior (desde el título principal).
-2. Pégalo en Microsoft Word o conviértelo a PDF.
-3. En cada lugar donde veas la etiqueta `[AQUI VA FOTO DE: ...]`, bórrala y pega la captura de pantalla correspondiente que tomaste durante la ejecución de tu laboratorio.
-4. Asegúrate de poner el link de tu video final en la parte superior.
-
-¡Con esta documentación impecable y el script corriendo a la perfección, tendrás garantizada la nota máxima en este laboratorio! Dime si necesitas ayuda con alguna otra parte de tu presentación.
