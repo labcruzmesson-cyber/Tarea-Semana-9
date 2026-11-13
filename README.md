@@ -139,7 +139,6 @@ Se programó la herramienta automatizada `hardening.py`, la cual orquesta la rec
 
 ### 7.6. Validación de Banner de Advertencia Pre-Login (FortiGate)
 * **Objetivo:** Comprobar que el firewall presenta un aviso legal disuasorio antes de solicitar credenciales o permitir el acceso, cumpliendo con el requisito legal de notificar que el sistema es de acceso restringido y está siendo monitoreado.
-* **Comandos probados desde Ubuntu Server:** `ssh -oKexAlgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 -c aes256-cbc admin@172.25.89.2`
 
 ![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/BANNER.png)
 
