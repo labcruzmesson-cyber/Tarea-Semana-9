@@ -142,8 +142,6 @@ Se programó la herramienta automatizada `hardening.py`, la cual orquesta la rec
 
 ![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-9/blob/main/IMAGES/BANNER.png)
 
-* **Resultado:** Al iniciar la conexión SSH, el sistema interrumpe el proceso de inicio de sesión estándar para imprimir el *Pre-login banner* configurado globalmente en FortiOS, requiriendo su lectura antes de exponer el prompt de contraseña.
-
 ---
 
 ### 8. Conclusiones
