@@ -1,0 +1,25 @@
+[
+  {
+    "name": "Router-L3",
+    "device_type": "cisco_ios",
+    "ip": "172.25.89.1",
+    "username": "admin",
+    "password": "Admin2025!",
+    "secret": "Admin2025!"
+  },
+  {
+    "name": "Switch-L2",
+    "device_type": "cisco_ios",
+    "ip": "10.25.89.2",
+    "username": "admin",
+    "password": "Admin2025!",
+    "secret": "Admin2025!"
+  },
+  {
+    "name": "FW-FortiGate",
+    "device_type": "fortinet",
+    "ip": "172.25.89.2",
+    "username": "admin",
+    "password": "Admin2025!"
+  }
+]
